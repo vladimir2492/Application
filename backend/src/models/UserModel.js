@@ -24,6 +24,11 @@ const UserModel = sequelize.define('user', {
         type: Sequelize.STRING,
         allowNull: false
         },
+    isVerified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
+    },    
     access: {
         type: Sequelize.STRING,
         allowNull: false

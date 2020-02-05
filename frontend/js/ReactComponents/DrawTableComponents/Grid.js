@@ -33,7 +33,10 @@ export default class Grid extends React.Component{
                 </thead>
                 <tbody>
                 {data.map(
-                    (data) => (<Row rowData={data} columns ={columns} key={'grid-row' + data.id} buttons={buttons}/>)
+                    (data) => (
+                    (data.isVerified) &&                   
+                    <Row rowData={data} columns ={columns} key={'grid-row' + data.id} buttons={buttons}/>
+                    )
                 )}
                 </tbody>                
             </table>                

@@ -1,6 +1,6 @@
 const express = require('express');
 const dbSetup = require('./setup/db-setup');
-dbSetup.setupDB('app');
+dbSetup.setupDB('appnew');
 
 const productsController = require('./controllers/products-controller');
 const usersController = require('./controllers/users-controller')
