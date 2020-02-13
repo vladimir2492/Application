@@ -23,8 +23,17 @@ export default class ListItems extends React.Component{
                     }
                 }}>Users </Link>
                 </li>
+                
+                <li>
+                <Link to={{
+                    pathname: '/account',
+                    state: {
+                        fromNotifications: true
+                    }
+                }}>Account </Link>
+                </li>
 
-                <li >
+                <li style={{paddingTop: '10%'}} >
                     <Registration /> 
                 </li>
             </ul>

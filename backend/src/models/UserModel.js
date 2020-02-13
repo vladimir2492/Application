@@ -32,7 +32,11 @@ const UserModel = sequelize.define('user', {
     access: {
         type: Sequelize.STRING,
         allowNull: false
-        }
+        },
+    img: {
+        type: Sequelize.STRING,
+        allowNull: true
+    }    
     }, {
         timestamps: false
         });

@@ -4,8 +4,8 @@ import LoginPage from '../LoginComponents/LoginPage';
 import UserTable from '../UserComponents/UserPage';
 import ProductPage from '../ProductComponents/ProductPage';
 import {PrivateRoute} from '../LoginComponents/PrivateRoute';
-import auth from '../../model/AppModel';
-import {AuthButton} from '../LoginComponents/AuthButton';
+import AccountPage from '../AccountComponents/AccountPage';
+
 
 
 
@@ -15,11 +15,12 @@ export default class SwitchComponent extends React.Component{
                 
         return(
             <>
-           <AuthButton auth={auth} /*signout={}*//>
+           
            <Switch>    
                 <Route path='/login'><LoginPage location={this.props.location} /></Route>
                 <PrivateRoute path='/users' component={UserTable} />
                 <PrivateRoute path="/products" component={ProductPage} />
+                <PrivateRoute path="/account" component={AccountPage} />
             </Switch> 
             </>
         )

@@ -2,6 +2,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 
@@ -17,6 +18,7 @@ module.exports = function(app) {
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+    app.use(fileUpload());
     app.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", 'http://localhost:8081');
         res.header("Access-Control-Allow-Credentials", 'true');

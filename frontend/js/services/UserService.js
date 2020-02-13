@@ -1,4 +1,5 @@
 import { BACKEND_URL } from '../config';
+import axios from 'axios';
 
 export default class UserService {
     constructor(){
@@ -81,14 +82,18 @@ export default class UserService {
     async logout() {
         console.log('---> pressed logout with token = '+this.authToken)
         const url = `${BACKEND_URL}/logout`;
+        let authHeader;
+        if(this.authToken){
+            authHeader = 'Bearer ' + this.authToken; 
+        }
         const resultRaw = await fetch(url, { method: 'POST',
+                    credentials: 'include',
                     headers:{
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + this.authToken 
-                    },
-                    credentials: 'include',
+                        'Authorization': authHeader
+                    }                    
                 })
-        return resultRaw.text();
+        return resultRaw.json();
     }
 
     async access() {
@@ -101,6 +106,7 @@ export default class UserService {
         let resonse = await fetch(url, {
             credentials: 'include',
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': authHeader
             }
         });
@@ -123,4 +129,36 @@ export default class UserService {
                 }
             })
     }
+
+    async takeImg(id){
+        const path = `${BACKEND_URL}/takeimg`;
+            return fetch(path, {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({
+                    id: id
+                }),
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json' 
+                }
+            })
+    }
+
+    async googleAuth(userData){
+        console.log('---> pressed googleauth with token = '+this.authToken)
+        const path = `${BACKEND_URL}/googleauth`;
+        const response = await fetch( path, {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(userData),
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            }
+        })
+        return response.json()
+    }
+    
+  
 }

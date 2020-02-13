@@ -2,6 +2,7 @@ import React from 'react';
 import {Redirect, withRouter} from 'react-router-dom';
 import UserService from '../../services/UserService';
 import appModel from '../../model/AppModel';
+import GoogleAuth from '../AccountComponents/GoogleAuth';
 
 
 class LoginPage extends React.Component{
@@ -30,7 +31,6 @@ class LoginPage extends React.Component{
       return;
     } 
     appModel.setLogined(true);    
-    /*document.cookie = `sid=${result.sid}`;*/
     document.cookie = `token=${result.token}`;    
     this.setState({redirectToReferrer: true})    
   }
@@ -60,8 +60,10 @@ class LoginPage extends React.Component{
                       </div>
 
                     <button  id="loginFormBtn" type="submit" className="btn btn-primary" >Sign in</button>
+                    <GoogleAuth from={this.props.location.state}/>
                 </fieldset>
             </form>
+      
     </div>
     )
   }

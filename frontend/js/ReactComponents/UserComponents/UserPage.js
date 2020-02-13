@@ -77,7 +77,7 @@ export default class UserPage extends React.Component{
         const result = await userService.access();
         
         if(!result.error){
-            if( result.message == 'User'){
+            if( result.message.access == 'User'){
                 return false;
             }
             return true;

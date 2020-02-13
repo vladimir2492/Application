@@ -16,9 +16,12 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
+    "@fortawesome/fontawesome-free": "^5.12.1",
+    "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "config": "^3.2.4",
     "dotenv": "^8.2.0",
+    "font-awesome": "^4.7.0",
     "jquery": "^3.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",

@@ -6,7 +6,7 @@ module.exports = async function (req, res, next) {
     const bearerHeader = req.headers["authorization"];
     if(typeof bearerHeader !== 'undefined'){
         const userAccess = await verifyJwt(bearerHeader);
-        if(userAccess === 'Admin'){
+        if(userAccess.access === 'Admin'){
             next();
         }
         else {
