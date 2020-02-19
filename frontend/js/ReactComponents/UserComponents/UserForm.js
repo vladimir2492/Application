@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import UserService from "../../services/UserService"
+import UserService from "../../services/UserService";
+import ErrorMessage from '../MainComponent/ErrorMessage';
 
 export default class AddUserForm extends React.Component{  
   constructor(props){
@@ -9,7 +10,9 @@ export default class AddUserForm extends React.Component{
       email:'',
       login:'',
       password:'',
-      access:'User'
+      access:'',
+      errorMessage: false,
+      errorText:''
     }
   }
 
@@ -26,6 +29,7 @@ export default class AddUserForm extends React.Component{
   
   submitHandler = async (event) => {  
     event.preventDefault();
+  
     const userService = new UserService();
     const {registr} = this.props;
     const {name, email, login, password, access} = this.state;
@@ -35,18 +39,29 @@ export default class AddUserForm extends React.Component{
       result = await userService.registr(name, email, login, password, access);  
     }
     else{
-      if(this.props.readOnly){
+      if(this.props.addOrEdit === 'edit'){
+        console.log('pressed edit button')
           result = await userService.edit(id, name, email, login, password, access); 
       }else{
+          console.log('pressed add button')
           result = await userService.add(name, email, login, password, access);    
       }
     }
     if (result.error) {
-      alert('Wrong credential.')
-      return;
+      console.log('error of adding')
+      this.setState({
+          errorMessage: true,
+          errorText: result.message
+      })
+      console.log('this.state.errorMessage = '+this.state.errorMessage);
+      console.log('this.state.errorMessage = '+this.state.errorText);
+      setTimeout(this.props.onComplete, 3000);
+    }else{
+      console.log('all right in add')
+      this.props.onComplete();
     }   
-    this.props.onComplete();
-  }
+    
+}
 
   onCangeHandler = (event) => {
     const target = event.target;
@@ -57,12 +72,16 @@ export default class AddUserForm extends React.Component{
     })
   }
 
-  
-
   render(){
+    console.log('addOredit = '+ this.props.addOrEdit)
     const {data, readOnly} = this.props;
     const typePassword = readOnly ? 'text' : 'password';
-    return (      
+    const {errorMessage, errorText} = this.state;
+    const allowAdmin = this.props.addOrEdit!='add' && this.props.registr!='registr'
+    return (   
+        <>
+        {errorMessage  ? <ErrorMessage text={errorText}/>
+        :  
         <form className="alert alert-primary addForm" style={{marginLeft:'1%', marginRight:'1%'}} onSubmit={(ev) => this.submitHandler(ev)}>
             <fieldset> 
             <div className="form-group">
@@ -81,16 +100,25 @@ export default class AddUserForm extends React.Component{
                 <label htmlFor="inputPassword">Password</label>
                 <input id="inputPassword" type={typePassword} value={data.password} readOnly={readOnly} name="password" className="form-control" required onChange={this.onCangeHandler}/>
             </div>
-            <div className="form-group">
-                <label htmlFor="inputAccess">Access</label>
-                <select id="inputAccess" value={this.state.value} defaultValue={data.access} id="inputAccess" name="access" className="form-control" required onChange={this.onCangeHandler}>
-                  <option value='Admin'>Admin</option>
-                  <option value='User'>User</option>
-                </select>
+            <div>
+              <p>Access of user: </p>
+            {allowAdmin && <div className="form-check form-check-inline">
+              <input checked={this.state.access === "Admin"} className="form-check-input" type="radio" name="access" id="inlineRadio1" value="Admin" onChange={this.onCangeHandler}/>
+              <label className="form-check-label" htmlFor="inlineRadio1">Admin</label>
+            </div>}
+            <div className="form-check form-check-inline">
+              <input checked={this.state.access === "Owner"} className="form-check-input" type="radio" name="access" id="inlineRadio2" value="Owner" required onChange={this.onCangeHandler}/>
+              <label className="form-check-label" htmlFor="inlineRadio2">Owner</label>
             </div>
-            <button className="btn btn-primary" type="submit" style={{marginTop:'3%'}}>Submit</button>
+            <div className="form-check form-check-inline">
+              <input checked={this.state.access === "User"} className="form-check-input" type="radio" name="access" id="inlineRadio2" value="User" required onChange={this.onCangeHandler}/>
+              <label className="form-check-label" htmlFor="inlineRadio2">User</label>
+            </div>
+            </div>
+            <button className="btn btn-primary" type="submit" style={{marginTop:'7%'}}>Submit</button>
             </fieldset>
-        </form>
+        </form>}
+        </>
     )
   }
 }

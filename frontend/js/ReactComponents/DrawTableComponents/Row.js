@@ -5,9 +5,8 @@ import ButtonsArea from './ButtonsArea';
 export default class Row extends React.Component{
   
     render(){
-        
-        const {rowData, columns} = this.props;        
-       
+        const {rowData, columns} = this.props; 
+
         return(
             <tr className="tableSrting">
                 {

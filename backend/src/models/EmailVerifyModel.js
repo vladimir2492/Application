@@ -10,7 +10,7 @@ const EmailVerifyModel = sequelize.define('verify', {
     token: {
         type: Sequelize.STRING,
         allowNull: false
-        }
+        }   
     }, {
         timestamps: false
         });

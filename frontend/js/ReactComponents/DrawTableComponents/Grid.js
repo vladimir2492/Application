@@ -9,7 +9,7 @@ export default class Grid extends React.Component{
     }
    
     render(){
-        const {options, isLoading, data, butAccess, component} = this.props   
+        const {options, isLoading, data, butAccess, component, ownerDelete} = this.props   
         let {columns, buttons} = options;
         if(!butAccess && component === 'users'){
             buttons =[];
@@ -33,10 +33,9 @@ export default class Grid extends React.Component{
                 </thead>
                 <tbody>
                 {data.map(
-                    (data) => (
-                    (data.isVerified) &&                   
-                    <Row rowData={data} columns ={columns} key={'grid-row' + data.id} buttons={buttons}/>
-                    )
+                    (data) => {                 
+                        return <Row rowData={data} columns={columns} key={'grid-row' + data[columns[0]]} buttons={buttons}/>
+                    }
                 )}
                 </tbody>                
             </table>                

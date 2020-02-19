@@ -2,8 +2,7 @@
 class Auth {
     constructor(){
         this.isLogined = false;
-        this.productData = [];
-        this.userData = [];
+        this.userAccess = null;
     }
 
     setLogined = (value) => {
@@ -11,9 +10,26 @@ class Auth {
         localStorage.setItem('isLogined', String(value))
     }
 
+    setAccess = (access) => {
+        this.userAccess = access;
+        localStorage.setItem('access', String(access))
+    }
+
     loadDataFromLS = () => {
         if(localStorage.getItem('isLogined') === 'true'){
             this.isLogined = true;
+        }
+    }
+
+    loadAccessFromLS = () => {
+        if(localStorage.getItem('access') === 'Admin'){
+            this.userAccess = 'Admin';
+        }
+        if(localStorage.getItem('access') === 'User'){
+            this.userAccess = 'User';
+        }
+        if(localStorage.getItem('access') === 'Owner'){
+            this.userAccess = 'Owner';
         }
     }
 }

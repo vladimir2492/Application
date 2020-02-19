@@ -69,7 +69,6 @@ export default class UserPage extends React.Component{
             isLoading: true,
             data: usersData
         })
-       
     }
 
     showButtons = async() => {
@@ -103,14 +102,14 @@ export default class UserPage extends React.Component{
         }
         return (
             <div>
-                <Grid options={this.state.options} data={data} isLoading={isLoading} butAccess={buttonsAccess}  component ='users'/>
+                <Grid options={this.state.options} data={data} isLoading={isLoading} butAccess={buttonsAccess} addOrEdit={this.state.addOrEdit}  component ='users'/>
                 {buttonsAccess ? 
                 <Button  variant="primary" onClick={this.onAddPress}>
                     Add user
                 </Button>
                 : null}
                 <ModalContainer show={showEditModal} onHide={this.closeAddForm} title={title}>
-                    <UserForm onComplete={this.onFormEditComplete} data={rowData} readOnly={readOnly}/>
+                    <UserForm onComplete={this.onFormEditComplete} data={rowData} readOnly={readOnly} addOrEdit={this.state.addOrEdit}/>
                 </ModalContainer>
             </div>
         )    

@@ -27,12 +27,18 @@ class LoginPage extends React.Component{
     const result = await userService.login(this.state.login, this.state.password);    
     if (result.error) {
       appModel.setLogined(false);
-      alert('Wrong credential.')
+      alert('Wrong credential.');
+      await this.props.refreshMenu();
       return;
     } 
-    appModel.setLogined(true);    
-    document.cookie = `token=${result.token}`;    
-    this.setState({redirectToReferrer: true})    
+    document.cookie = `token=${result.token}`;  
+    appModel.setLogined(true); 
+    const accessRow = await userService.access();
+    if (!accessRow.error){
+      appModel.setAccess(accessRow.message.access);
+    }
+    this.setState({redirectToReferrer: true});
+    await this.props.refreshMenu();    
   }
 
   render(){

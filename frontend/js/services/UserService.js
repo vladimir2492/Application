@@ -2,18 +2,23 @@ import { BACKEND_URL } from '../config';
 import axios from 'axios';
 
 export default class UserService {
-    constructor(){
+    /*constructor(){
         this.authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     }
 
+    setAuthToken(){
+        this.authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    }*/
+
      async login(login, password) {
-        console.log('---> pressed login with token = '+this.authToken)
+      
         const url = `${BACKEND_URL}/login`;
         const data = { login, password }
         const resultRaw = await fetch(url, { method: 'POST',
                     body: JSON.stringify(data), 
                     headers:{
-                        'Content-Type': 'application/json' ,
+                        'Content-Type': 'application/json'// ,
+                        //'Authorization': 'Bearer ' + authToken 
                     },
                     credentials: 'include',
                 })
@@ -21,37 +26,39 @@ export default class UserService {
     }
 
     async edit(id, name, email, login, password, access) {
-        console.log('---> pressed edit with token = '+this.authToken)
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log('---> pressed edit with token = '+authToken)
         const url = `${BACKEND_URL}/users/edit`;
         const data = {id, name, email, login, password, access}
         const resultRaw = await fetch(url, { method: 'POST',
                     body: JSON.stringify(data), 
                     headers:{
                          'Content-Type': 'application/json',
-                         'Authorization': 'Bearer ' + this.authToken 
+                         'Authorization': 'Bearer ' + authToken 
                         },
                     credentials: 'include',
                 })
-        const text = await resultRaw.text(); 
-        return text; 
+        return resultRaw.json();
     }
 
     async add(name, email, login, password, access) {
-        console.log('---> pressed add with token = '+this.authToken)
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log('---> pressed add with token = '+authToken)
         const url = `${BACKEND_URL}/users/add`;
         const data = { name, email, login, password, access}
         const resultRaw = await fetch(url, { method: 'POST',
                     body: JSON.stringify(data), 
                     headers:{
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + this.authToken 
+                        'Authorization': 'Bearer ' + authToken 
                     },
                     credentials: 'include',
                 })
-        return resultRaw.text();
+        return resultRaw.json();
     }
 
     async registr(name, email, login, password, access) {
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         console.log('---> pressed registr without token')
         const url = `${BACKEND_URL}/users/registr`;
         const data = { name, email, login, password, access}
@@ -62,17 +69,18 @@ export default class UserService {
                     },
                     credentials: 'include',
                 })
-        return resultRaw.text();
+        return resultRaw.json();
     }
 
     async fetchData(){
-        console.log('---> pressed fetch data with token = '+this.authToken)
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log('---> pressed fetch data with token = '+authToken)
         const path = `${BACKEND_URL}/users/data`
         const response = await fetch(path, 
             {
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Bearer ' + this.authToken 
+                    'Authorization': 'Bearer ' + authToken 
                 }
             });
         const resJson = await response.json()
@@ -80,11 +88,12 @@ export default class UserService {
     }
 
     async logout() {
-        console.log('---> pressed logout with token = '+this.authToken)
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log('---> pressed logout with token = '+authToken)
         const url = `${BACKEND_URL}/logout`;
         let authHeader;
-        if(this.authToken){
-            authHeader = 'Bearer ' + this.authToken; 
+        if(authToken){
+            authHeader = 'Bearer ' + authToken; 
         }
         const resultRaw = await fetch(url, { method: 'POST',
                     credentials: 'include',
@@ -97,10 +106,11 @@ export default class UserService {
     }
 
     async access() {
-        console.log('---> pressed access with token = '+this.authToken)
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log('---> pressed access with token = '+authToken)
         let authHeader;
-        if(this.authToken){
-            authHeader = 'Bearer ' + this.authToken; 
+        if(authToken){
+            authHeader = 'Bearer ' + authToken; 
         }
         const url =  `${BACKEND_URL}/access`;
         let resonse = await fetch(url, {
@@ -114,7 +124,8 @@ export default class UserService {
     }
 
     async deleteRow(id){
-        console.log('---> pressed delete with token = '+this.authToken)
+        console.log('---> pressed delete with token = '+authToken)
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         const path = `${BACKEND_URL}/users/delete`;
             return fetch(path, {
                 method: 'POST',
@@ -125,7 +136,7 @@ export default class UserService {
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + this.authToken 
+                    'Authorization': 'Bearer ' + authToken 
                 }
             })
     }
@@ -146,7 +157,7 @@ export default class UserService {
     }
 
     async googleAuth(userData){
-        console.log('---> pressed googleauth with token = '+this.authToken)
+        console.log('---> pressed googleauth with token = '+authToken)
         const path = `${BACKEND_URL}/googleauth`;
         const response = await fetch( path, {
             method: 'POST',

@@ -1,28 +1,30 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import LoginPage from '../LoginComponents/LoginPage';
-import UserTable from '../UserComponents/UserPage';
-import ProductPage from '../ProductComponents/ProductPage';
+import UserPage from '../UserComponents/UserPage';
 import {PrivateRoute} from '../LoginComponents/PrivateRoute';
 import AccountPage from '../AccountComponents/AccountPage';
-
-
-
+import RestPage from '../RestComponents/RestPage';
+import ReviewPage from '../ReviewComponents/ReviewPage';
+import RestPageForUser from '../RestComponents/RestPageForUser';
 
 export default class SwitchComponent extends React.Component{
     render(){
-
-                
+                        
         return(
-            <>
+            
+           <div> 
+                <Route path='/login'><LoginPage refreshMenu={this.props.refreshMenu}/></Route>
+                <PrivateRoute path='/users' component={UserPage} />
+                {/*<PrivateRoute path="/account" component={AccountPage} />*/}
+                <PrivateRoute exact path="/" component={AccountPage} />
+                <PrivateRoute path="/restaurants" component={RestPage} />
+                <PrivateRoute path="/reviews" component={ReviewPage} />
+                <PrivateRoute path="/restaurants_user" component={RestPageForUser} />
+                   
+            </div>
            
-           <Switch>    
-                <Route path='/login'><LoginPage location={this.props.location} /></Route>
-                <PrivateRoute path='/users' component={UserTable} />
-                <PrivateRoute path="/products" component={ProductPage} />
-                <PrivateRoute path="/account" component={AccountPage} />
-            </Switch> 
-            </>
+            
         )
     }
 }

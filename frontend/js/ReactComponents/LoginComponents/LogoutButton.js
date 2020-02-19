@@ -7,16 +7,20 @@ const userService = new UserService();
 class LogoutButton extends React.Component{
     submitHandler = async (event) => {
       event.preventDefault();
+      const {refreshMenu} = this.props;
+      await refreshMenu();
       const result = await userService.logout();
       if (result.error) {
         alert('Wrong credential.')
         return;
       }
       appModel.setLogined(false);
+      appModel.setAccess(null);
       this.props.history.push('/')
     }
   
     render(){
+    
       return(
         <form className="logoutArea" onSubmit={(ev) => this.submitHandler(ev)}>
           <button className='btn btn-primary'> Log out </button>

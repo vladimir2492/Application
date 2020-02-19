@@ -1,78 +1,99 @@
 import React, {Component} from "react";
-import {withRouter} from 'react-router-dom';
-import auth from '../../model/AppModel'
 import {
-  BrowserRouter as Router
+  /*BrowserRouter as Router*/ Router, Link
 } from "react-router-dom";
-import {AuthButton} from '../LoginComponents/AuthButton'
-
 import ListItems from './ListItems';
 import SwitchComponent from './SwitchComponent';
 import appModel from '../../model/AppModel'
 import UserService from "../../services/UserService";
-import {Container, Row, Col} from "react-bootstrap";
 const userService = new UserService();
-//import GoogleAuth from "../AccountComponents/GoogleAuth";
+import { createBrowserHistory } from "history";
+const history = createBrowserHistory();
+
+
 
 export default class App extends React.Component{
   constructor(props){
     super(props)
     this.props = props
     this.state = {
-      checkingLogin: true
+      checkingLogin: true,
+      access: null,
+      checckingAccess: false
     }
   }
 
-  componentDidMount() {
-    this.setState({ checkingLogin: true });
-    this.checkAuth();    
+  async componentDidMount() {
+    this.refreshMenu();
   }
   
+  refreshMenu = async() => {
+    console.log('------> refreshed menu');
+    this.setState({ 
+      checkingLogin: true,
+      checkAccess: false 
+    });
+    await this.checkAuth(); 
+    await this.checkAccess();
+  }
+
   async checkAuth() {
     appModel.loadDataFromLS(); //возвращает true or false, в зависимости от того, залогинен был пользователь или нет 
     if (appModel.isLogined) {  
-      const accessUser = await userService.access();
-      if (!accessUser.error) {
-        appModel.user = accessUser;
-        this.setState({checkingLogin: false})   
-        return;
-      }      
+      this.setState({checkingLogin: false})   
+      return;   
     } 
     appModel.setLogined(false);
     return this.setState({checkingLogin: false})
   }
 
+  async checkAccess() {
+    appModel.loadAccessFromLS();
+    let access = null;
+    if(appModel.userAccess === 'Admin'){
+      access = 'Admin';
+    }
+    if(appModel.userAccess === 'User'){
+      access = 'User';
+    }
+    if(appModel.userAccess === 'Owner'){
+      access = 'Owner';
+    }
+    if(access){
+      this.setState({
+      access: access,
+      checckingAccess: true
+      })
+    }
+  }
+
+  logoutRefresh = () =>{
+    console.log('!!!!!!!!!!!')
+    this.setState({
+      checckingAccess: false
+    })
+  }
+
  
 
   render(){
-    if (this.state.checkingLogin) {
+    const {checkingLogin, checckingAccess, access} = this.state;
+    if (checkingLogin) {
       return <div style={{marginLeft:'3%', marginRight:'3%', marginTop:'3%'}}>Loading appplication please wait...</div>
     }
     return(
-      <>
-      
       <div className="container-fluid">
         <div className="row">
-          <Router>
-          <div className="col-2 " style={{paddingTop:'7%', textAlign: 'center',  boxShadow:'0px 3px 10px 1px rgba(138,133,148,0.74)'}}>
-          <ListItems />
-          <AuthButton auth={auth} /*signout={}*//>
-          </div>
-          <div className="col-10" style={{paddingTop: '3%'}}>
-          <SwitchComponent />
-          </div>
+          <Router history={history}>
+            <div className="col-2 " style={{paddingTop:'3%', textAlign: 'center',  boxShadow:'0px 3px 10px 1px rgba(138,133,148,0.74)'}}>
+              <ListItems currentUser={checckingAccess} isAdmin={access=='Admin'} isAdminOrOwner={access=='Admin'||access=='Owner'} isUser={access=='User'} refreshMenu={this.logoutRefresh}/>
+            </div>
+            <div className="col-10" style={{paddingTop: '3%'}}>
+              <SwitchComponent refreshMenu={this.refreshMenu}/>
+            </div>
           </Router>
         </div>
       </div>
-
-      {/*<Router>
-        <div style={{marginLeft:'3%', marginRight:'3%', marginTop:'3%'}}>
-          <ListItems />
-          <SwitchComponent />
-        </div>
-      </Router>*/}
-      </>
-
     )
   }
 }

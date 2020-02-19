@@ -16,7 +16,7 @@ class BaseService {
     returnTableData(offset, limit) {
         return this.Model.findAndCountAll({ offset, limit})
         .then(result => result.rows)
-
+      
     }
 
     addRowInTable(newObj) {

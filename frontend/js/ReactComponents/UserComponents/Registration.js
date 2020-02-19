@@ -26,7 +26,7 @@ export default class Registration extends React.Component{
         const {showModal} = this.state;
         return(
             <div>
-                <Button onClick={this.onRegistrPress} style={{fontSize: '150%'}}>
+                <Button onClick={this.onRegistrPress} >
                     Registration
                 </Button>  
                 <ModalContainer show={showModal} onHide={this.closeForm} title={title}>
