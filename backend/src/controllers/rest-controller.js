@@ -2,18 +2,16 @@ const express = require('express');
 const router = express.Router();
 const uniqid = require('uniqid');
 const RestService = require('../services/RestService');
-const path = require('path');
 const ensureToken = require('../guard/ensureToken');
-
 const restService = new RestService();
+const accessGuard = require('../guard/access-guard');
 
-//сделать так, что в зависимости отзапроса возвращались либо все рестораны, либо только заданное в запросе количество
-router.get('/data', /*ensureToken,*/ async (req, res) => {
+router.get('/data', ensureToken, (req, res, next) => accessGuard(req, res, next, ['User', 'Admin', 'Owner']), async (req, res) => {
     let data = await restService.returnTableData();
     res.send(200, data);
 })
 
-router.post('/add', /*ensureToken,*/ async (req, res) => {
+router.post('/add', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Owner', 'Admin']), async (req, res) => {
     const {
         name,
         address,
@@ -34,7 +32,7 @@ router.post('/add', /*ensureToken,*/ async (req, res) => {
     res.status(200).send({ message: 'Add of restaurant was successful', error: false });
 })
 
-router.post('/delete', /*ensureToken,*/ async (req, res) => {
+router.post('/delete', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Admin', 'Owner']), async (req, res) => {
     const {
         id
     } = req.body;
@@ -46,7 +44,7 @@ router.post('/delete', /*ensureToken,*/ async (req, res) => {
     
 })
 
-router.post('/edit', /*ensureToken,*/ async (req, res) => {
+router.post('/edit', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Owner', 'Admin']), async (req, res) => {
     const {
         id,
         name,
@@ -59,13 +57,12 @@ router.post('/edit', /*ensureToken,*/ async (req, res) => {
         address,
         id_owner
     };
-    console.log('data of rest for edit = '+ JSON.stringify(newElement))
     await restService.editRow(newElement)
     res.status(200).send({ message: 'Edit of restaurant was successful', error: false });
 });
 
 //возвращает всю инфу о принадлежащих владельцу ресторанах
-router.post('/ownerrest', async(req, res) => {
+router.post('/ownerrest', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Owner']), async(req, res) => {
     const {id_owner} = req.body;
     let owenRest=[];
     if(id_owner){
@@ -81,7 +78,6 @@ router.post('/ownerrest', async(req, res) => {
         return res.status(200).send({message: owenRest, error: false})
     }
     return res.status(400).send({message: 'Empty req.body with id_owner data', error: true})
-    
 })
 
 

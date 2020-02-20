@@ -2,7 +2,6 @@ import React, {Fragment} from "react";
 import axios from 'axios';
 import {BACKEND_URL} from '../../config';
 
-
 export default class FileUpload extends React.Component{
 
     state={
@@ -11,7 +10,6 @@ export default class FileUpload extends React.Component{
         uploadPercentage: 0
     }
 
-       
     selectHandler = (event) => {
         this.setState({
             selectedFile: event.target.files[0],
@@ -27,10 +25,12 @@ export default class FileUpload extends React.Component{
         const formData = new FormData();
         formData.append('file', file);
         formData.append('id', userId);
+        const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         try{
             const res = await axios.post(path, formData,{
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + authToken 
                 },
                 onUploadProgress: progressEvent => {
                     this.setState({uploadPercentage:
@@ -38,28 +38,22 @@ export default class FileUpload extends React.Component{
                         Math.round((progressEvent.loaded * 100) / progressEvent.total)
                       )}
                     );
-          
                     // Clear percentage
-                    setTimeout(() => this.setState({uploadPercentage:0, selectedFileName:'Choose img'}), 1000)
-                   
+                    setTimeout(() => {
+                        this.setState({uploadPercentage:0, selectedFileName:'Choose img'});
+                        this.props.refreshImage(userId);
+                    }
+                    , 1000);
+                    
                 }
-            
             })
-            const {fileName, filePath} = res.data;
-            
         }catch(err){
             console.log('Error!!!')
         }
-        //this.setState({selectedFileName:'Choose img'})
-
     }
-
     
     render(){       
-
-
         const {selectedFile, selectedFileName, uploadPercentage} = this.state;
-        
         return(
             <Fragment>
                 <form onSubmit={this.submitHandler}>
@@ -73,7 +67,7 @@ export default class FileUpload extends React.Component{
                     </div>
                     </div>
                 </form> 
-                <div className="progress" /*style={{width:'35%'}}*/>
+                <div className="progress">
                     <div className="progress-bar"
                         role="progressbar" 
                         style={{width: `${uploadPercentage}%`}}>

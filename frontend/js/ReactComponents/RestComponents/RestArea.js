@@ -13,7 +13,7 @@ export default class RestArea extends React.Component{
         const buttons = options.buttons; 
         
         return(
-            <div className="restArea" style={{border: 'grey solid 1px', padding:'3%', margin:'5%', marginLeft:'10%', marginRight:'10%'}}>
+            <div className="restArea" style={{border: 'grey solid 1px', padding:'3%', color:'black', margin:'5%', marginLeft:'10%', marginRight:'10%'}}>
                 <div className="id"><b>id:</b> {id}</div>
                 <div className="restName"><b>Name of restaurant:</b> {name}</div>
                 <div className="restAddress"><b>Address:</b> {address}</div>

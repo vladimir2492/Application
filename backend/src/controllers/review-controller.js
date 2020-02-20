@@ -2,18 +2,17 @@ const express = require('express');
 const router = express.Router();
 const uniqid = require('uniqid');
 const ReviewService = require('../services/ReviewService');
-const path = require('path');
 const ensureToken = require('../guard/ensureToken');
+const accessGuard = require('../guard/access-guard');
 
 const reviewService = new ReviewService();
 
-router.get('/data', /*ensureToken,*/ async (req, res) => {
-    console.log('we are here!!!!!!!!!!')
+router.get('/data', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Admin']), async (req, res) => {
     let data = await reviewService.returnTableData();
     res.send(200, data);
 })
 
-router.post('/add', /*ensureToken,*/ async (req, res) => {
+router.post('/add', ensureToken, (req, res, next) => accessGuard(req, res, next, ['User', 'Admin']), async (req, res) => {
     const d = Date.now();
     const {
         text_review,
@@ -36,7 +35,7 @@ router.post('/add', /*ensureToken,*/ async (req, res) => {
     res.status(200).send({ message: 'Add of review was successful', error: false });
 })
 
-router.post('/delete', /*ensureToken,*/ async (req, res) => {
+router.post('/delete', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Admin']), async (req, res) => {
     const {
         id
     } = req.body;
@@ -47,7 +46,7 @@ router.post('/delete', /*ensureToken,*/ async (req, res) => {
     return res.status(200).send({ message: 'Delete was wrong', error: true });
 })
 
-router.post('/edit', /*ensureToken,*/ async (req, res) => {
+router.post('/edit', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Owner', 'Admin']), async (req, res) => {
     const {
         id,
         text_review,
@@ -69,7 +68,7 @@ router.post('/edit', /*ensureToken,*/ async (req, res) => {
 });
 
 //возвращает среднюю оценку, максимальную и минимальную оценку
-router.post('/getrating', async (req, res) => {
+router.post('/getrating', ensureToken, (req, res, next) => accessGuard(req, res, next, ['User']), async (req, res) => {
     const {rest_name} = req.body;
     if (rest_name){
         const reviewData = await reviewService.returnTableData();   
@@ -80,7 +79,7 @@ router.post('/getrating', async (req, res) => {
 })
 
 //возвращает все отзывы по задаваемому имени ресторана
-router.post('/onerestreviews', async (req, res) =>{
+router.post('/onerestreviews', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Owner']), async (req, res) =>{
     const {rest_name} = req.body;
     if(rest_name){
         const reviewData = await reviewService.returnTableData();
@@ -98,15 +97,14 @@ router.post('/onerestreviews', async (req, res) =>{
     res.status(401).send({message: 'Empty req.body without rest_name', error: true})
 })
 
-//возвращает все отзывы без ответа а по заданному
-router.post('/answer_onerestreviews', async (req, res) =>{
+//возвращает все отзывы без ответа 
+router.post('/answer_onerestreviews', ensureToken, (req, res, next) => accessGuard(req, res, next, ['Owner']), async (req, res) =>{
     const {ownerRests} = req.body;
     let reviewsArr = [];
     if(ownerRests){
         const reviewData = await reviewService.returnTableData();
         let i =1;
         for(let rest of ownerRests){
-            let reviews=[];
             for(let rev of reviewData){
                 if(rev.rest_name === rest.name && rev.answer==null){
                     i++;
@@ -119,7 +117,7 @@ router.post('/answer_onerestreviews', async (req, res) =>{
     return res.status(400).send({message: 'Empty req.body without restaurants of owner', error: true})
 })
 
-router.post('/last_review', async (req, res) =>{
+router.post('/last_review', ensureToken, (req, res, next) => accessGuard(req, res, next, ['User']), async (req, res) =>{
     const {rest_name} = req.body;
     let last=0;
     let lastRev=null;

@@ -66,7 +66,7 @@ class LoginPage extends React.Component{
                       </div>
 
                     <button  id="loginFormBtn" type="submit" className="btn btn-primary" >Sign in</button>
-                    <GoogleAuth from={this.props.location.state}/>
+                    <GoogleAuth from={this.props.location.state} refreshMenu={this.props.refreshMenu}/>
                 </fieldset>
             </form>
       

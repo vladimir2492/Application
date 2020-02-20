@@ -40,27 +40,20 @@ export default class AddUserForm extends React.Component{
     }
     else{
       if(this.props.addOrEdit === 'edit'){
-        console.log('pressed edit button')
           result = await userService.edit(id, name, email, login, password, access); 
       }else{
-          console.log('pressed add button')
           result = await userService.add(name, email, login, password, access);    
       }
     }
     if (result.error) {
-      console.log('error of adding')
       this.setState({
           errorMessage: true,
           errorText: result.message
       })
-      console.log('this.state.errorMessage = '+this.state.errorMessage);
-      console.log('this.state.errorMessage = '+this.state.errorText);
       setTimeout(this.props.onComplete, 3000);
     }else{
-      console.log('all right in add')
       this.props.onComplete();
     }   
-    
 }
 
   onCangeHandler = (event) => {
@@ -73,7 +66,6 @@ export default class AddUserForm extends React.Component{
   }
 
   render(){
-    console.log('addOredit = '+ this.props.addOrEdit)
     const {data, readOnly} = this.props;
     const typePassword = readOnly ? 'text' : 'password';
     const {errorMessage, errorText} = this.state;

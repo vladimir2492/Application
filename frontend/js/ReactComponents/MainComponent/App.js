@@ -28,7 +28,6 @@ export default class App extends React.Component{
   }
   
   refreshMenu = async() => {
-    console.log('------> refreshed menu');
     this.setState({ 
       checkingLogin: true,
       checkAccess: false 
@@ -68,13 +67,10 @@ export default class App extends React.Component{
   }
 
   logoutRefresh = () =>{
-    console.log('!!!!!!!!!!!')
     this.setState({
       checckingAccess: false
     })
   }
-
- 
 
   render(){
     const {checkingLogin, checckingAccess, access} = this.state;

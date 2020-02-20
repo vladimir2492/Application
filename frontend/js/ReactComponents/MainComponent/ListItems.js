@@ -8,7 +8,6 @@ export default class ListItems extends React.Component{
 
     render(){
         const {currentUser, isAdmin, isAdminOrOwner, isUser, refreshMenu} = this.props;
-        console.log('currentUser = '+ currentUser + ', isAdmin = ' + isAdmin + ', isAdminOrOwner = ' + isAdminOrOwner + ', isUser = '+ isUser)
         return(
             currentUser ?
             <ul style={{margin: '5%'}}>
@@ -55,7 +54,7 @@ export default class ListItems extends React.Component{
                             state: {
                                 fromNotifications: true
                             }
-                        }}>Restaurants for User </Link>
+                        }}>Restaurants </Link>
                     </li>}
 
                 {/*<li style={{paddingTop: '10%'}} >

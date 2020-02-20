@@ -1,6 +1,6 @@
 import React from 'react';
 import UserService from '../../services/UserService';
-
+const userService = new UserService();
 import appModel from '../../model/AppModel';
 import {Redirect, withRouter} from 'react-router-dom';
 
@@ -31,7 +31,6 @@ class GoogleAuth extends React.Component{
             ()=> _authErr()
         )
         const _authOk = async (user) =>{
-           const userService = new UserService;
            const googleUser = user.getBasicProfile();
            const userData = {
                img: googleUser.getImageUrl(),
@@ -46,9 +45,11 @@ class GoogleAuth extends React.Component{
             alert('Wrong credential.')
             return;
            }
-           appModel.setLogined(true);
            document.cookie = `token=${result.message}`;
+           appModel.setLogined(true);
+           appModel.setAccess('User');
            this.setState({redirectToReferrer: true}) ;
+           this.props.refreshMenu();
         }
         const _authErr = () => {
             console.log('auth error')
