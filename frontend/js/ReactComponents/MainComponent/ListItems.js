@@ -8,8 +8,10 @@ export default class ListItems extends React.Component{
 
     render(){
         const {currentUser, isAdmin, isAdminOrOwner, isUser, refreshMenu} = this.props;
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        let displayMenu = token && currentUser;
         return(
-            currentUser ?
+            displayMenu ?
             <ul style={{margin: '5%'}}>
 
                 {isAdmin &&                
