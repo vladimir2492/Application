@@ -6,22 +6,29 @@ const userService = new UserService();
 import {BACKEND_URL} from '../../config/index';
 
 export default class AccountPage extends React.Component{
+    _isMounted = false;
+
     state={
         userData: '',
         userImgSrc: null
     }
 
     async componentDidMount(){
+        this._isMounted = true;
         const access = await userService.access();
         if(!access.error){
-            this.setState({
-                userData: access.message
-            });
+            if (this._isMounted) {
+                this.setState({
+                    userData: access.message
+                });
+            }
             const id = this.state.userData.id;
             if(id!==undefined && id.split('-')[0] === 'google'){
                 //взять изображение с гугла
                 const googleSrc = access.message.img;
+                if (this._isMounted) {
                 this.setState({userImgSrc: googleSrc});
+                }
                 return;
             }
             await this.refreshImage(id);
@@ -32,11 +39,17 @@ export default class AccountPage extends React.Component{
         const response = await userService.takeImg(id);
         if(!response.error){
             if(response.message!=null){
+                if (this._isMounted) {
                 this.setState({userImgSrc: `${BACKEND_URL}/images/${response.message}`})
+                }
             }
         }
     }
     
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     render(){
         const {userData, userImgSrc} = this.state;
         let allowUploadImg = true;
