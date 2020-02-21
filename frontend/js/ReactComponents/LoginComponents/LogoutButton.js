@@ -8,7 +8,7 @@ class LogoutButton extends React.Component{
     submitHandler = async (event) => {
       event.preventDefault();
       const {refreshMenu} = this.props;
-      await refreshMenu();
+      
       const result = await userService.logout();
       if (result.error) {
         alert('Wrong credential.')
@@ -16,6 +16,7 @@ class LogoutButton extends React.Component{
       }
       appModel.setLogined(false);
       appModel.setAccess(null);
+      await refreshMenu();
       this.props.history.push('/')
     }
   

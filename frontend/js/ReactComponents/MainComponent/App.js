@@ -73,6 +73,11 @@ export default class App extends React.Component{
   }
 
   render(){
+    if(!document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1") ){
+      console.log('token is true')
+    }else{
+      console.log('token is false')
+    }
     const {checkingLogin, checckingAccess, access} = this.state;
     if (checkingLogin) {
       return <div style={{marginLeft:'3%', marginRight:'3%', marginTop:'3%'}}>Loading appplication please wait...</div>

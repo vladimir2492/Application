@@ -49,7 +49,7 @@ router.get('/access', ensureToken, async (req, res) =>{
 })
 
 
-router.post('/logout', ensureToken, (req, res) => {
+router.post('/logout', /*ensureToken,*/ (req, res) => {
     req.session.destroy(err => {
         res.clearCookie('token');
         res.status(200).send({message: 'Logout was successful', error: false})

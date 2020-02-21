@@ -31,7 +31,7 @@ class LoginPage extends React.Component{
       await this.props.refreshMenu();
       return;
     } 
-    document.cookie = `token=${result.token}`;  
+    document.cookie = `token=${result.token}; max-age=2678400`;  
     appModel.setLogined(true); 
     const accessRow = await userService.access();
     if (!accessRow.error){
