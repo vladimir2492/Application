@@ -31,7 +31,10 @@ export default class AccountPage extends React.Component{
                 }
                 return;
             }
-            await this.refreshImage(id);
+            if(id!==undefined){
+                await this.refreshImage(id);
+            }
+            
         }           
     }
 

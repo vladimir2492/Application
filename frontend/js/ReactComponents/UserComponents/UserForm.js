@@ -103,8 +103,8 @@ export default class AddUserForm extends React.Component{
               <label className="form-check-label" htmlFor="inlineRadio2">Owner</label>
             </div>
             <div className="form-check form-check-inline">
-              <input checked={this.state.access === "User"} className="form-check-input" type="radio" name="access" id="inlineRadio2" value="User" required onChange={this.onCangeHandler}/>
-              <label className="form-check-label" htmlFor="inlineRadio2">User</label>
+              <input checked={this.state.access === "User"} className="form-check-input" type="radio" name="access" id="inlineRadio3" value="User" required onChange={this.onCangeHandler}/>
+              <label className="form-check-label" htmlFor="inlineRadio3">User</label>
             </div>
             </div>
             <button className="btn btn-primary" type="submit" style={{marginTop:'7%'}}>Submit</button>

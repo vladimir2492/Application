@@ -44,7 +44,7 @@ class GoogleAuth extends React.Component{
             alert('Wrong credential.')
             return;
            }
-           document.cookie = `token=${result.message}; max-age=2678400`;
+           document.cookie = `token=${result.message}; max-age=2678400;`;
            appModel.setLogined(true);
            appModel.setAccess('User');
            this.setState({redirectToReferrer: true}) ;
