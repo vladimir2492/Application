@@ -38,14 +38,13 @@ class GoogleAuth extends React.Component{
                email: googleUser.getEmail(),
                access: 'User'               
            }
-           console.log('user data in GoogleAuth = '+ JSON.stringify(userData, null, 4));
            const result = await userService.googleAuth(userData);
            if(result.error){
             appModel.setLogined(false);
             alert('Wrong credential.')
             return;
            }
-           document.cookie = `token=${result.message}`;
+           document.cookie = `token=${result.message}; max-age=2678400`;
            appModel.setLogined(true);
            appModel.setAccess('User');
            this.setState({redirectToReferrer: true}) ;

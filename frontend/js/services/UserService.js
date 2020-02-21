@@ -138,6 +138,7 @@ export default class UserService {
 
     async googleAuth(userData){
         const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log('authToken of google auth = ' + authToken);
         const path = `${BACKEND_URL}/googleauth`;
         const response = await fetch( path, {
             method: 'POST',
